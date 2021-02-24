@@ -14,6 +14,7 @@ import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
+import RoomById from "./containers/RoomScreen";
 import Logo from "./components/Logo";
 
 const Tab = createBottomTabNavigator();
@@ -80,7 +81,7 @@ export default function App() {
 
         <Stack.Navigator
           screenOptions={{
-            title: () => <Logo></Logo>,
+            title: <Logo />,
             headerStyle: {
               backgroundColor: "white",
               height: 110,
@@ -91,15 +92,17 @@ export default function App() {
             },
           }}
         >
-          <Stack.Screen
-            name="Tab"
-            options={{ headerShown: false, animationEnabled: false }}
-          >
+          <Stack.Screen name="Tab" options={{ animationEnabled: false }}>
             {() => (
               <Tab.Navigator
                 tabBarOptions={{
                   activeTintColor: "tomato",
                   inactiveTintColor: "gray",
+                }}
+                screenOptions={({ route, navigation }) => {
+                  // console.log(route.name);
+                  // console.log(navigation);
+                  return { header: () => null };
                 }}
               >
                 {/* *********** ONGLETS *********** */}
@@ -108,9 +111,11 @@ export default function App() {
                   name="Home"
                   options={{
                     tabBarLabel: "Home",
-                    tabBarIcon: ({ color, size }) => (
-                      <Ionicons name={"ios-home"} size={size} color={color} />
-                    ),
+                    tabBarIcon: ({ color, size }) => {
+                      return (
+                        <Ionicons name={"ios-home"} size={size} color={color} />
+                      );
+                    },
                   }}
                 >
                   {() => (
@@ -118,18 +123,22 @@ export default function App() {
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: <Logo></Logo>,
-                          headerStyle: {
-                            backgroundColor: "white",
-                            height: 110,
-                          },
-                          headerTitleStyle: {
-                            color: "white",
-                            alignSelf: "center",
+                          header: () => {
+                            null;
                           },
                         }}
                       >
                         {() => <HomeScreen />}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="RoomScreen"
+                        options={{
+                          header: () => {
+                            null;
+                          },
+                        }}
+                      >
+                        {(props) => <RoomById {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
@@ -152,7 +161,11 @@ export default function App() {
                     <Stack.Navigator>
                       <Stack.Screen
                         name="AroundMe"
-                        // options={{ title: "Settings", tabBarLabel: "Settings" }}
+                        options={{
+                          header: () => {
+                            null;
+                          },
+                        }}
                       >
                         {() => <SettingsScreen setToken={setToken} />}
                       </Stack.Screen>
@@ -173,7 +186,11 @@ export default function App() {
                     <Stack.Navigator>
                       <Stack.Screen
                         name="Settings"
-                        options={{ title: "Settings", tabBarLabel: "Settings" }}
+                        options={{
+                          header: () => {
+                            null;
+                          },
+                        }}
                       >
                         {() => <SettingsScreen setToken={setToken} />}
                       </Stack.Screen>

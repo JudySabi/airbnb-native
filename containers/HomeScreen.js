@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
-import { Button, Text, View, FlatList } from "react-native";
+import { Button, Text, View, FlatList, StyleSheet } from "react-native";
 import CardRoom from "../components/CardRoom";
 const axios = require("axios");
 
@@ -17,7 +17,7 @@ export default function HomeScreen() {
         );
         setData(res.data);
         setLoading(true);
-        console.log(res.data[0]);
+        // console.log(res.data[1]);
       } catch (error) {
         alert(error.response.data.error);
       }
@@ -30,16 +30,12 @@ export default function HomeScreen() {
   ) : (
     <FlatList
       data={data}
-      // renderItem={(obj) => {
-      //   console.log(obj.item.title);
-      // }}
-
-      // renderItem avec destructuring :
       renderItem={({ item }) => {
-        console.log(item.title);
+        // console.log(item._id);
         return <CardRoom item={item} />;
       }}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item._id}
+      style={{ backgroundColor: "white" }}
     />
   );
 }
