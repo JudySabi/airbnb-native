@@ -28,8 +28,18 @@ export default function HomeScreen() {
   return !loading ? (
     <Text>En cours de chargement</Text>
   ) : (
-    <FlatList data={data}>
-      <CardRoom />
-    </FlatList>
+    <FlatList
+      data={data}
+      // renderItem={(obj) => {
+      //   console.log(obj.item.title);
+      // }}
+
+      // renderItem avec destructuring :
+      renderItem={({ item }) => {
+        console.log(item.title);
+        return <CardRoom item={item} />;
+      }}
+      keyExtractor={(item) => item.id}
+    />
   );
 }
