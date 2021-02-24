@@ -6,28 +6,31 @@ import axios from "axios";
 
 export default function SignInScreen({ setToken }) {
   const navigation = useNavigation();
-  const [data, setData] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSignIn = async () => {
     const userToken = "secret-token";
-    // !name || !password ? alert("Please fill all fields") :
-    try {
-      const res = await axios.post(
-        "https://express-airbnb-api.herokuapp.com/user/log_in",
-        { email: email, password: password },
-        {
-          headers: {
-            "Test-Header": "test-value",
-          },
+    if (!email || !password) {
+      alert("Hey ! U need to fill all inputs !");
+    } else {
+      try {
+        const res = await axios.post(
+          "https://express-airbnb-api.herokuapp.com/user/log_in",
+          { email: email, password: password },
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        if (res.status === 200) {
+          setToken(userToken);
+          alert(`Bienvenue ${res.data.email}`);
         }
-      );
-      setData(res.data);
-      setToken(userToken);
-      res.data.headers["Test-Header"];
-    } catch (error) {
-      console.log(error.message);
+      } catch (error) {
+        alert(error.response.data.error);
+      }
     }
   };
 

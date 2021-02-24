@@ -3,12 +3,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  AntDesign,
+  FontAwesome,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
+import Logo from "./components/Logo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -21,14 +27,17 @@ export default function App() {
 
   const setToken = async (token) => {
     if (token) {
+      // On l'enregistre dans l'asyncstorage (équivalent au cookie)
       AsyncStorage.setItem("userToken", token);
     } else {
+      // on supprive le token de la mémoire de l'appareil
       AsyncStorage.removeItem("userToken");
     }
 
     setUserToken(token);
   };
 
+  // des qu'on lance l'application, on regarde si un token est enregistré ou pas dans la mémoire de l'appareil
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -48,7 +57,7 @@ export default function App() {
   return (
     <NavigationContainer>
       {isLoading ? null : userToken === null ? ( // We haven't finished checking for the token yet
-        // No token found, user isn't signed in
+        // Si le token n'est pas là alors il affiche que ces deux écrans :
         <Stack.Navigator>
           <Stack.Screen name="SignIn" options={{ animationEnabled: false }}>
             {() => (
@@ -63,20 +72,25 @@ export default function App() {
             )}
           </Stack.Screen>
           <Stack.Screen name="SignUp">
-            {() => (
-              <SignUpScreen
-                setToken={setToken}
-                setName={setName}
-                name={name}
-                setPassword={setPassword}
-                password={password}
-              />
-            )}
+            {() => <SignUpScreen setToken={setToken} />}
           </Stack.Screen>
         </Stack.Navigator>
       ) : (
-        // User is signed in
-        <Stack.Navigator>
+        // Si le token est présent alors les autres écrans nous sont proposé (home etc)
+
+        <Stack.Navigator
+          screenOptions={{
+            title: () => <Logo></Logo>,
+            headerStyle: {
+              backgroundColor: "white",
+              height: 110,
+            },
+            headerTitleStyle: {
+              color: "white",
+              alignSelf: "center",
+            },
+          }}
+        >
           <Stack.Screen
             name="Tab"
             options={{ headerShown: false, animationEnabled: false }}
@@ -88,6 +102,8 @@ export default function App() {
                   inactiveTintColor: "gray",
                 }}
               >
+                {/* *********** ONGLETS *********** */}
+                {/* ---------- HOME ---------- */}
                 <Tab.Screen
                   name="Home"
                   options={{
@@ -102,35 +118,54 @@ export default function App() {
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
+                          title: <Logo></Logo>,
+                          headerStyle: {
+                            backgroundColor: "white",
+                            height: 110,
+                          },
+                          headerTitleStyle: {
+                            color: "white",
+                            alignSelf: "center",
+                          },
                         }}
                       >
                         {() => <HomeScreen />}
                       </Stack.Screen>
-
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+                {/* ---------- AROUND ME ---------- */}
+                <Tab.Screen
+                  name="AroundMe"
+                  options={{
+                    tabBarLabel: "Around Me",
+                    tabBarIcon: ({ color, size }) => (
+                      <FontAwesome
+                        name={"map-marker"}
+                        size={size}
+                        color={color}
+                      />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
                       <Stack.Screen
-                        name="Profile"
-                        options={{
-                          title: "User Profile",
-                        }}
+                        name="AroundMe"
+                        // options={{ title: "Settings", tabBarLabel: "Settings" }}
                       >
-                        {() => <ProfileScreen />}
+                        {() => <SettingsScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+                {/* ---------- My Profile ------------ */}
                 <Tab.Screen
-                  name="Settings"
+                  name="Setting"
                   options={{
-                    tabBarLabel: "Settings",
+                    tabBarLabel: "My Profil",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
+                      <AntDesign name={"user"} size={size} color={color} />
                     ),
                   }}
                 >
@@ -141,6 +176,14 @@ export default function App() {
                         options={{ title: "Settings", tabBarLabel: "Settings" }}
                       >
                         {() => <SettingsScreen setToken={setToken} />}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="Profile"
+                        options={{
+                          title: "User Profile",
+                        }}
+                      >
+                        {() => <ProfileScreen />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
