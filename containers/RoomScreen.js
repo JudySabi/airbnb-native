@@ -1,6 +1,14 @@
 import React, { useState, useEffect, Dimensions } from "react";
-import { Text, View, Image, StyleSheet, Button } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { SwiperFlatList } from "react-native-swiper-flatlist";
 const axios = require("axios");
 
 const RoomScreen = ({ route, navigation }) => {
@@ -22,24 +30,34 @@ const RoomScreen = ({ route, navigation }) => {
   }, []);
   // console.log(data.photos);
   return !loading ? (
-    <Text>En cours de chargement</Text>
+    <ActivityIndicator size="large" color="tomato" />
   ) : (
     <ScrollView>
-      <ScrollView horizontal>
-        <View style={{ flexDirection: "row" }}>
-          {data.photos.map((elem) => {
-            // console.log(elem.url);
-            return (
-              <Image
-                key={elem.picture_id}
-                source={{ uri: elem.url }}
-                style={style.photos}
-                resizeMode="cover"
-              ></Image>
-            );
-          })}
-        </View>
-      </ScrollView>
+      {/* <ScrollView horizontal> */}
+      <SwiperFlatList
+        // autoplay
+        // autoplayDelay={5}
+        // autoplayLoop
+        paginationDefaultColor
+        paginationActiveColor
+        index={2}
+        showPagination
+        style={{ flex: 1, backgroundColor: "tomato" }}
+      >
+        {data.photos.map((elem) => {
+          // console.log(elem.url);
+          return (
+            <Image
+              key={elem.picture_id}
+              source={{ uri: elem.url }}
+              style={style.photos}
+              resizeMode="cover"
+            ></Image>
+          );
+        })}
+      </SwiperFlatList>
+
+      {/* </ScrollView> */}
       <Text style={style.price}>{data.price} €</Text>
 
       <View style={{ width: "95%" }}>
@@ -59,6 +77,7 @@ const style = StyleSheet.create({
     width: 400,
     // width: window,
     marginRight: 10,
+    alignSelf: "center",
   },
   price: {
     backgroundColor: "#2A2A2A",

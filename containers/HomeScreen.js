@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
-import { Button, Text, View, FlatList, StyleSheet } from "react-native";
+import {
+  Button,
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import CardRoom from "../components/CardRoom";
 const axios = require("axios");
 
@@ -26,7 +33,7 @@ export default function HomeScreen() {
   }, []);
 
   return !loading ? (
-    <Text>En cours de chargement</Text>
+    <ActivityIndicator size="large" color="tomato" />
   ) : (
     <FlatList
       data={data}

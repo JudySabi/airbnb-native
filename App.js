@@ -9,12 +9,15 @@ import {
   FontAwesome,
   FontAwesome5,
 } from "@expo/vector-icons";
+// CONTAINERS
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
-import RoomById from "./containers/RoomScreen";
+import RoomScreen from "./containers/RoomScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
+// COMPONENTS
 import Logo from "./components/Logo";
 
 const Tab = createBottomTabNavigator();
@@ -78,7 +81,6 @@ export default function App() {
         </Stack.Navigator>
       ) : (
         // Si le token est présent alors les autres écrans nous sont proposé (home etc)
-
         <Stack.Navigator
           screenOptions={{
             title: <Logo />,
@@ -138,7 +140,7 @@ export default function App() {
                           },
                         }}
                       >
-                        {(props) => <RoomById {...props} />}
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
@@ -167,7 +169,7 @@ export default function App() {
                           },
                         }}
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {() => <AroundMeScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
